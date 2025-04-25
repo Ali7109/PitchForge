@@ -2,41 +2,41 @@
 
 @keyframes orbitGlow {
 	0% {
-		box-shadow: 15px 0 30px #753b93, -15px 0 30px #82347f;
+		box-shadow: 15px 0 30px #6366f1, -15px 0 30px #6366f1; /* indigo-500 */
 	}
 	12.5% {
-		box-shadow: 10.6px 10.6px 30px #753b93, -10.6px -10.6px 30px #82347f;
+		box-shadow: 10.6px 10.6px 30px #6366f1, -10.6px -10.6px 30px #6366f1;
 	}
 	25% {
-		box-shadow: 0 15px 30px #753b93, 0 -15px 30px #82347f;
+		box-shadow: 0 15px 30px #6366f1, 0 -15px 30px #6366f1;
 	}
 	37.5% {
-		box-shadow: -10.6px 10.6px 30px #753b93, 10.6px -10.6px 30px #82347f;
+		box-shadow: -10.6px 10.6px 30px #6366f1, 10.6px -10.6px 30px #6366f1;
 	}
 	50% {
-		box-shadow: -15px 0 30px #753b93, 15px 0 30px #82347f;
+		box-shadow: -15px 0 30px #6366f1, 15px 0 30px #6366f1;
 	}
 	62.5% {
-		box-shadow: -10.6px -10.6px 30px #753b93, 10.6px 10.6px 30px #82347f;
+		box-shadow: -10.6px -10.6px 30px #6366f1, 10.6px 10.6px 30px #6366f1;
 	}
 	75% {
-		box-shadow: 0 -15px 30px #753b93, 0 15px 30px #82347f;
+		box-shadow: 0 -15px 30px #6366f1, 0 15px 30px #6366f1;
 	}
 	87.5% {
-		box-shadow: 10.6px -10.6px 30px #753b93, -10.6px 10.6px 30px #82347f;
+		box-shadow: 10.6px -10.6px 30px #6366f1, -10.6px 10.6px 30px #6366f1;
 	}
 	100% {
-		box-shadow: 15px 0 30px #753b93, -15px 0 30px #82347f;
+		box-shadow: 15px 0 30px #6366f1, -15px 0 30px #6366f1;
 	}
 }
 
 .shadow-neu {
-	box-shadow: 15px 0 30px #753b93, -15px 0 30px #82347f;
+	box-shadow: 15px 0 30px #6366f1, -15px 0 30px #6366f1;
 	animation: orbitGlow 3s linear infinite;
 }
 
 .animate-glow {
-	box-shadow: 0 0 10px #8d55c2, 0 0 30px #9333ea, 0 0 50px #9333ea;
+	box-shadow: 0 0 10px #6366f1, 0 0 30px #6366f1, 0 0 50px #6366f1;
 }
 
 .levitate {
@@ -47,7 +47,7 @@
 	width: 6px;
 }
 .custom-scroll::-webkit-scrollbar-thumb {
-	background-color: #a855f7;
+	background-color: #6366f1; /* indigo-500 */
 	border-radius: 10px;
 }
 .custom-scroll::-webkit-scrollbar-track {

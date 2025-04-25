@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import components from "./SVGs";
+import React, { useEffect, useRef, useState } from "react";
+import components, { Stop } from "../components/SVGs";
 import { motion } from "framer-motion";
+import IconButton from "../components/IconButton";
 
 const { Mic28, Pause } = components;
 
@@ -15,9 +16,13 @@ declare global {
 
 type RecordingViewProps = {
 	setPitch: (pitch: string) => void;
+	setAskWhosListening: (ask: boolean) => void;
 };
 
-export default function RecordingView({ setPitch }: RecordingViewProps) {
+export default function RecordingView({
+	setPitch,
+	setAskWhosListening,
+}: RecordingViewProps) {
 	const [paused, setPaused] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
 	const [recordingComplete, setRecordingComplete] = useState(false);
@@ -79,6 +84,15 @@ export default function RecordingView({ setPitch }: RecordingViewProps) {
 		setRecordingComplete(true);
 	};
 
+	// 🔄 Reset the stag
+	const handleReset = () => {
+		setTranscript("");
+		setStoredText("");
+		setIsRecording(false);
+		setPaused(false);
+		stopRecording();
+	};
+
 	// 🪄 Auto-scroll to the bottom for that "I'm being transcribed" feel
 	useEffect(() => {
 		if (scrollRef.current) {
@@ -87,7 +101,13 @@ export default function RecordingView({ setPitch }: RecordingViewProps) {
 	}, [transcript]);
 
 	return (
-		<div className="flex flex-col items-center justify-center w-full h-screen px-4">
+		<div className="relative flex flex-col items-center justify-evenly w-full h-screen px-4">
+			<button
+				onClick={() => setAskWhosListening(true)}
+				className="text-sm bg-indigo-500 text-white font-semibold px-4 py-2 rounded-full shadow-md hover:bg-purple-600 transition-all"
+			>
+				{"< change listener"}
+			</button>
 			{(isRecording || paused) && (
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
@@ -104,7 +124,7 @@ export default function RecordingView({ setPitch }: RecordingViewProps) {
 									: "🎙️ Recording"}
 							</p>
 							{isRecording && (
-								<span className="w-4 h-4 bg-purple-500 animate-pulse rounded-full" />
+								<span className="w-4 h-4 bg-indigo-500 animate-pulse rounded-full" />
 							)}
 						</div>
 						<p className="text-sm italic text-[#e0d5e6]">
@@ -130,40 +150,35 @@ export default function RecordingView({ setPitch }: RecordingViewProps) {
 				</motion.div>
 			)}
 
-			{!recordingComplete ? (
-				<motion.div
-					layout
-					className="mt-6 flex flex-col items-center gap-4"
-				>
-					<button
-						onClick={handleToggleRecording}
-						className="flex items-center justify-center border rounded-full p-4 bg-purple-500 text-white hover:bg-purple-600 shadow-md transition-all cursor-pointer"
-					>
-						{isRecording ? (
-							<Pause size="30" />
-						) : (
-							<Mic28 size="30" />
-						)}
-					</button>
+			{!recordingComplete && (
+				<motion.div className="mt-6 flex flex-col items-center gap-4">
+					{isRecording ? (
+						<div className="flex items-center w-full justify-between gap-5">
+							<IconButton
+								func={handleToggleRecording}
+								element={<Pause size="30" />}
+							/>
+							<IconButton
+								func={handleReset}
+								element={<Stop size="30" />}
+							/>
+						</div>
+					) : (
+						<IconButton
+							func={handleToggleRecording}
+							element={<Mic28 size="30" />}
+						/>
+					)}
 					<motion.button
 						disabled={storedText.trim().length < 20}
 						onClick={handleDone}
 						className={
-							"cursor-pointer px-6 py-2 bg-purple-500 text-white font-semibold rounded-xl shadow-md hover:bg-purple-600 disabled:hover:bg-purple-700 disabled:opacity-25 transition-all " +
+							"cursor-pointer px-6 py-2 bg-indigo-500 text-white font-semibold rounded-xl shadow-md hover:bg-purple-600 disabled:hover:bg-purple-700 disabled:opacity-25 transition-all " +
 							(storedText.trim().length < 20 ? "hidden" : "")
 						}
 					>
 						Save
 					</motion.button>
-				</motion.div>
-			) : (
-				<motion.div
-					layout
-					className="flex items-center w-full justify-center mt-6"
-				>
-					<h3 className="text-center text-gray-500 text-sm">
-						Your voice, your story — safely tucked away. 🤞
-					</h3>
 				</motion.div>
 			)}
 		</div>

@@ -1,8 +1,8 @@
-type Mic28Props = {
+type SVGProps = {
 	size: string;
 };
 
-const Mic28 = ({ size }: Mic28Props) => (
+const Mic28 = ({ size }: SVGProps) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -27,7 +27,7 @@ const Mic28 = ({ size }: Mic28Props) => (
 					y2="27.834"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stopColor="#A78BFF" /> {/* purple */}
+					<stop stopColor="#FFFFFF" /> {/* purple */}
 					<stop offset="1" stopColor="#3B82F6" /> {/* deep blue */}
 				</linearGradient>
 				<linearGradient
@@ -39,18 +39,14 @@ const Mic28 = ({ size }: Mic28Props) => (
 					gradientUnits="userSpaceOnUse"
 				>
 					<stop stopColor="#60A5FA" /> {/* soft violet */}
-					<stop offset="1" stopColor="#FFFFFF" /> {/* light blue */}
+					<stop offset="1" stopColor="#FFFFFF" />
 				</linearGradient>
 			</defs>
 		</g>
 	</svg>
 );
 
-type PauseProps = {
-	size: string;
-};
-
-const Pause = ({ size }: PauseProps) => (
+const Pause = ({ size }: SVGProps) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -64,6 +60,37 @@ const Pause = ({ size }: PauseProps) => (
 	</svg>
 );
 
-const components = { Pause, Mic28 };
+export const Stop = ({ size }: SVGProps) => (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 28 28"
+	>
+		<defs>
+			<linearGradient
+				id="fluentColorStop"
+				x1="0"
+				x2="28"
+				y1="0"
+				y2="28"
+				gradientUnits="userSpaceOnUse"
+			>
+				<stop offset="0%" stopColor="#FFFFFF " /> {/* violet */}
+				<stop offset="100%" stopColor="#FFFFFF" /> {/* soft purple */}
+			</linearGradient>
+		</defs>
+		<rect
+			x="4"
+			y="4"
+			width="20"
+			height="20"
+			rx="2"
+			fill="url(#fluentColorStop)"
+		/>
+	</svg>
+);
+
+const components = { Pause, Mic28, Stop };
 
 export default components;

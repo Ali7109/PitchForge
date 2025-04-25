@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import RecordingView from "./components/RecordingView";
-import FeedbackView from "./components/FeedbackView";
+import RecordingView from "./pages/RecordingView";
+import FeedbackView from "./pages/FeedbackView";
 import CustomListenerModal from "./components/CustomListenerModal";
 import { motion } from "motion/react";
 
@@ -62,7 +62,10 @@ export default function Home() {
 					</button>
 				</motion.div>
 			) : !pitch ? (
-				<RecordingView setPitch={setPitch} />
+				<RecordingView
+					setPitch={setPitch}
+					setAskWhosListening={setAskWhosListening}
+				/>
 			) : (
 				<FeedbackView text={pitch} />
 			)}
