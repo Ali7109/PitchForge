@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import components from "./SVGs";
 import { motion } from "framer-motion";
 const { Mic28, Pause } = components;
@@ -18,6 +18,7 @@ export default function RecordingView() {
 	const [storedText, setStoredText] = useState("");
 
 	const recognitionRef = useRef<any>(null);
+	const scrollRef = useRef<HTMLDivElement | null>(null);
 
 	const startRecording = () => {
 		setIsRecording(true);
@@ -66,7 +67,11 @@ export default function RecordingView() {
 		setRecordingComplete(true);
 		console.log("Final Transcript:", storedText);
 	};
-
+	useEffect(() => {
+		if (scrollRef.current) {
+			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+		}
+	}, [transcript]);
 	return (
 		<div className="flex flex-col items-center justify-center w-full h-screen bg-[#f0f2f5] px-4">
 			{(isRecording || transcript) && (
@@ -98,6 +103,7 @@ export default function RecordingView() {
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: 10 }}
+							ref={scrollRef}
 							className="h-30 overflow-y-auto shadow-neu rounded-md p-4 bg-white shadow-inner text-gray-800 mt-4 scroll-smooth custom-scroll"
 						>
 							<p className="mb-0 whitespace-pre-wrap">
