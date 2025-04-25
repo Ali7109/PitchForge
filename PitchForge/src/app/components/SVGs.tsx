@@ -27,8 +27,8 @@ const Mic28 = ({ size }: Mic28Props) => (
 					y2="27.834"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stopColor="#7C3AED" /> {/* purple */}
-					<stop offset="1" stopColor="#1E3A8A" /> {/* deep blue */}
+					<stop stopColor="#A78BFF" /> {/* purple */}
+					<stop offset="1" stopColor="#3B82F6" /> {/* deep blue */}
 				</linearGradient>
 				<linearGradient
 					id="fluentColorMic281"
@@ -38,8 +38,8 @@ const Mic28 = ({ size }: Mic28Props) => (
 					y2="28.113"
 					gradientUnits="userSpaceOnUse"
 				>
-					<stop stopColor="#C084FC" /> {/* soft violet */}
-					<stop offset="1" stopColor="#60A5FA" /> {/* light blue */}
+					<stop stopColor="#60A5FA" /> {/* soft violet */}
+					<stop offset="1" stopColor="#FFFFFF" /> {/* light blue */}
 				</linearGradient>
 			</defs>
 		</g>

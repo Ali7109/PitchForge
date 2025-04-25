@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import components from "./SVGs";
 import { motion } from "framer-motion";
+
 const { Mic28, Pause } = components;
 
 declare global {
@@ -11,7 +13,12 @@ declare global {
 	}
 }
 
-export default function RecordingView() {
+type RecordingViewProps = {
+	setPitch: (pitch: string) => void;
+};
+
+export default function RecordingView({ setPitch }: RecordingViewProps) {
+	const [paused, setPaused] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
 	const [recordingComplete, setRecordingComplete] = useState(false);
 	const [transcript, setTranscript] = useState("");
@@ -20,6 +27,7 @@ export default function RecordingView() {
 	const recognitionRef = useRef<any>(null);
 	const scrollRef = useRef<HTMLDivElement | null>(null);
 
+	// 🎤 Lights, camera, talk!
 	const startRecording = () => {
 		setIsRecording(true);
 		const recognition = new window.webkitSpeechRecognition();
@@ -33,7 +41,7 @@ export default function RecordingView() {
 				const result = event.results[i];
 				if (result.isFinal) {
 					setStoredText((prev) => prev + " " + result[0].transcript);
-					setTranscript(""); // clear current display
+					setTranscript("");
 				} else {
 					interim += result[0].transcript;
 				}
@@ -41,62 +49,70 @@ export default function RecordingView() {
 			setTranscript(interim);
 		};
 
-		recognition.onend = () => {
-			setIsRecording(false);
-		};
-
+		recognition.onend = () => setIsRecording(false);
 		recognitionRef.current = recognition;
 		recognition.start();
 	};
 
+	// 🎬 Cut! Wrap it up
 	const stopRecording = () => {
 		if (recognitionRef.current) recognitionRef.current.stop();
 	};
 
+	// ⏯ Toggle like a boss
 	const handleToggleRecording = () => {
 		if (isRecording) {
+			setPaused(true);
 			stopRecording();
 		} else {
+			setPaused(false);
 			startRecording();
 		}
 		setIsRecording(!isRecording);
 	};
 
+	// ✅ Call it a wrap
 	const handleDone = () => {
+		setPitch(storedText);
+		setPaused(false);
 		stopRecording();
 		setRecordingComplete(true);
-		console.log("Final Transcript:", storedText);
 	};
+
+	// 🪄 Auto-scroll to the bottom for that "I'm being transcribed" feel
 	useEffect(() => {
 		if (scrollRef.current) {
 			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
 		}
 	}, [transcript]);
+
 	return (
-		<div className="flex flex-col items-center justify-center w-full h-screen bg-[#f0f2f5] px-4">
-			{(isRecording || transcript) && (
+		<div className="flex flex-col items-center justify-center w-full h-screen px-4">
+			{(isRecording || paused) && (
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					exit={{ opacity: 0, y: 20 }}
 					transition={{ duration: 0.5 }}
-					className="w-full max-w-2xl p-6 rounded-2xl bg-[#f9f9f9] shadow-neu"
+					className="w-full max-w-2xl p-6 rounded-2xl shadow-neu"
 				>
 					<div className="space-y-4">
 						<div className="flex justify-between items-center">
-							<p className="text-md font-semibold">
-								{recordingComplete ? "Recorded" : "Recording"}
+							<p className="text-md font-semibold text-purple-500">
+								{recordingComplete
+									? "🎧 Recorded"
+									: "🎙️ Recording"}
 							</p>
 							{isRecording && (
-								<span className="w-4 h-4 bg-purple-500 animate-pulse rounded-full"></span>
+								<span className="w-4 h-4 bg-purple-500 animate-pulse rounded-full" />
 							)}
 						</div>
-						<p className="text-sm italic text-gray-500">
+						<p className="text-sm italic text-[#e0d5e6]">
 							{recordingComplete
-								? "Thanks for talking!"
+								? "Thanks for talking to us."
 								: isRecording
-								? "Start speaking..."
-								: "Paused"}
+								? "The mic is yours..."
+								: "Paused... but ready"}
 						</p>
 
 						<motion.div
@@ -104,32 +120,24 @@ export default function RecordingView() {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: 10 }}
 							ref={scrollRef}
-							className="h-30 overflow-y-auto shadow-neu rounded-md p-4 bg-white shadow-inner text-gray-800 mt-4 scroll-smooth custom-scroll"
+							className="h-30 overflow-y-auto p-4 shadow-inner rounded-md text-[#e0d5e6] mt-4 scroll-smooth custom-scroll"
 						>
 							<p className="mb-0 whitespace-pre-wrap">
 								{transcript}
 							</p>
 						</motion.div>
-
-						{!recordingComplete && (
-							<motion.button
-								onClick={handleDone}
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.95 }}
-								className="px-6 py-2 bg-purple-500 text-white font-semibold rounded-xl shadow-md hover:bg-purple-600 transition-all"
-							>
-								Done
-							</motion.button>
-						)}
 					</div>
 				</motion.div>
 			)}
 
 			{!recordingComplete ? (
-				<motion.div layout className="mt-6">
+				<motion.div
+					layout
+					className="mt-6 flex flex-col items-center gap-4"
+				>
 					<button
 						onClick={handleToggleRecording}
-						className="flex items-center justify-center border rounded-full p-4 bg-purple-700 text-white hover:bg-gray-700 shadow-md transition-all"
+						className="flex items-center justify-center border rounded-full p-4 bg-purple-500 text-white hover:bg-purple-600 shadow-md transition-all cursor-pointer"
 					>
 						{isRecording ? (
 							<Pause size="30" />
@@ -137,6 +145,16 @@ export default function RecordingView() {
 							<Mic28 size="30" />
 						)}
 					</button>
+					<motion.button
+						disabled={storedText.trim().length < 20}
+						onClick={handleDone}
+						className={
+							"cursor-pointer px-6 py-2 bg-purple-500 text-white font-semibold rounded-xl shadow-md hover:bg-purple-600 disabled:hover:bg-purple-700 disabled:opacity-25 transition-all " +
+							(storedText.trim().length < 20 ? "hidden" : "")
+						}
+					>
+						Save
+					</motion.button>
 				</motion.div>
 			) : (
 				<motion.div
@@ -144,12 +162,10 @@ export default function RecordingView() {
 					className="flex items-center w-full justify-center mt-6"
 				>
 					<h3 className="text-center text-gray-500 text-sm">
-						Your recording is safe with us. We pinky promise. 🤞
+						Your voice, your story — safely tucked away. 🤞
 					</h3>
 				</motion.div>
 			)}
-
-			<style jsx>{``}</style>
 		</div>
 	);
 }
